@@ -1,18 +1,32 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-
-import  Navbar  from "../components/navigation/Navbar";
-import  Footer  from "../components/navigation/Footer";
+import { check_authenticated, load_user, refresh } from "../redux/actions/auth";
+import { useEffect } from "react";
+import { connect } from 'react-redux'
+import Navbar from "../components/navigation/Navbar";
+import Footer from "../components/navigation/Footer";
 
 const Layout = (props) => {
-    return(
+
+    useEffect(() => {
+        props.refresh()
+        props.check_authenticated()
+        props.load_user()
+    }, []);
+
+    return (
         <div>
             <Navbar />
-            <ToastContainer autoClose={3000} />
+            <ToastContainer autoClose={5000} />
             {props.children}
             <Footer />
         </div>
     )
 }
 
-export default Layout
+export default connect(null, {
+    check_authenticated,
+    load_user,
+    refresh
+})(Layout)
