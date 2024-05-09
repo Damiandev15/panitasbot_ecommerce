@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable import/no-anonymous-default-export */
 import {
     SIGNUP_SUCCESS,
     SIGNUP_FAIL,
@@ -14,20 +12,23 @@ import {
     AUTHENTICATED_SUCCESS,
     AUTHENTICATED_FAIL,
     REFRESH_SUCCESS,
-    REFRESH_FAIL
-} from '../actions/types';
+    REFRESH_FAIL,
+    RESET_PASSWORD_SUCCESS,
+    RESET_PASSWORD_FAIL,
+    RESET_PASSWORD_CONFIRM_SUCCESS,
+    RESET_PASSWORD_CONFIRM_FAIL,
+    LOGOUT
+} from '../actions/types'
 
 const initialState = {
-
     access: localStorage.getItem('access'),
     refresh: localStorage.getItem('refresh'),
     isAuthenticated: null,
     user: null,
     loading: false
-
 }
 
-export default function (state = initialState, action) {
+export default function Auth(state = initialState, action) {
     const { type, payload } = action;
 
     switch (type) {
@@ -74,10 +75,15 @@ export default function (state = initialState, action) {
                 access: localStorage.getItem('access'),
                 refresh: localStorage.getItem('refresh')
             }
+
         case ACTIVATION_SUCCESS:
         case ACTIVATION_FAIL:
+        case RESET_PASSWORD_SUCCESS:
+        case RESET_PASSWORD_FAIL:
+        case RESET_PASSWORD_CONFIRM_SUCCESS:
+        case RESET_PASSWORD_CONFIRM_FAIL:
             return {
-                ...state,
+                ...state
             }
 
         case REFRESH_SUCCESS:
@@ -91,6 +97,7 @@ export default function (state = initialState, action) {
         case SIGNUP_FAIL:
         case LOGIN_FAIL:
         case REFRESH_FAIL:
+        case LOGOUT:
             localStorage.removeItem('access')
             localStorage.removeItem('refresh')
             return {
@@ -99,9 +106,7 @@ export default function (state = initialState, action) {
                 refresh: null,
                 isAuthenticated: false,
                 user: null,
-
-            };
-
+            }
         default:
             return state
     }
