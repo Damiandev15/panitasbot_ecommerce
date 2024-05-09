@@ -13,9 +13,13 @@ import {
     AUTHENTICATED_FAIL,
     REFRESH_SUCCESS,
     REFRESH_FAIL,
-} from './types';
-
-import { setAlert } from './alert'
+    RESET_PASSWORD_SUCCESS,
+    RESET_PASSWORD_FAIL,
+    RESET_PASSWORD_CONFIRM_SUCCESS,
+    RESET_PASSWORD_CONFIRM_FAIL,
+    LOGOUT
+} from './types'
+import { setAlert } from './alert';
 import axios from 'axios'
 
 export const check_authenticated = () => async dispatch => {
@@ -193,7 +197,6 @@ export const activate = (uid, token) => async dispatch => {
         type: SET_AUTH_LOADING
     });
 
-
     const config = {
         headers: {
             'Content-Type': 'application/json'
@@ -201,22 +204,23 @@ export const activate = (uid, token) => async dispatch => {
     };
 
     const body = JSON.stringify({
-        uid, token
+        uid,
+        token
     });
 
     try {
-        const res = await axios.post(`${process.env.REACT_APP_API_URL}/auth/users/activation/`, body, config)
+        const res = await axios.post(`${process.env.REACT_APP_API_URL}/auth/users/activation/`, body, config);
 
         if (res.status === 204) {
             dispatch({
-                type: ACTIVATION_SUCCESS,
+                type: ACTIVATION_SUCCESS
             });
-            dispatch(setAlert('Cuenta activada correctamente', 'green'))
+            dispatch(setAlert('Cuenta activada correctamente', 'green'));
         } else {
             dispatch({
                 type: ACTIVATION_FAIL
             });
-            dispatch(setAlert('Error al activar cuenta', 'red'))
+            dispatch(setAlert('Error activando cuenta', 'red'));
         }
         dispatch({
             type: REMOVE_AUTH_LOADING
@@ -229,9 +233,8 @@ export const activate = (uid, token) => async dispatch => {
         dispatch({
             type: REMOVE_AUTH_LOADING
         });
-        dispatch(setAlert('Error conectando con el servidor, intenta mas tarde', 'red'))
+        dispatch(setAlert('Error al conectar con el servidor, intenta mas tarde.', 'red'));
     }
-
 };
 
 export const refresh = () => async dispatch => {
@@ -270,4 +273,115 @@ export const refresh = () => async dispatch => {
             type: REFRESH_FAIL
         });
     }
+}
+
+export const reset_password = (email) => async dispatch => {
+    dispatch({
+        type: SET_AUTH_LOADING
+    });
+
+    const config = {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    };
+
+    const body = JSON.stringify({ email });
+
+    try {
+        const res = await axios.post(`${process.env.REACT_APP_API_URL}/auth/users/reset_password/`, body, config);
+
+        if (res.status === 204) {
+            dispatch({
+                type: RESET_PASSWORD_SUCCESS
+            });
+            dispatch({
+                type: REMOVE_AUTH_LOADING
+            });
+            dispatch(setAlert('Password reset email sent', 'green'));
+        } else {
+            dispatch({
+                type: RESET_PASSWORD_FAIL
+            });
+            dispatch({
+                type: REMOVE_AUTH_LOADING
+            });
+            dispatch(setAlert('Error sending password reset email', 'red'));
+        }
+    }
+    catch (err) {
+        dispatch({
+            type: RESET_PASSWORD_FAIL
+        });
+        dispatch({
+            type: REMOVE_AUTH_LOADING
+        });
+        dispatch(setAlert('Error sending password reset email', 'red'));
+    }
+}
+
+export const reset_password_confirm = (uid, token, new_password, re_new_password) => async dispatch => {
+    dispatch({
+        type: SET_AUTH_LOADING
+    });
+
+    const config = {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    };
+
+    const body = JSON.stringify({
+        uid,
+        token,
+        new_password,
+        re_new_password
+    });
+
+    if (new_password !== re_new_password) {
+        dispatch({
+            type: RESET_PASSWORD_CONFIRM_FAIL
+        });
+        dispatch({
+            type: REMOVE_AUTH_LOADING
+        });
+        dispatch(setAlert('Passwords do not match', 'red'));
+    } else {
+        try {
+            const res = await axios.post(`${process.env.REACT_APP_API_URL}/auth/users/reset_password_confirm/`, body, config);
+
+            if (res.status === 204) {
+                dispatch({
+                    type: RESET_PASSWORD_CONFIRM_SUCCESS
+                });
+                dispatch({
+                    type: REMOVE_AUTH_LOADING
+                });
+                dispatch(setAlert('Password has been reset successfully', 'green'));
+            } else {
+                dispatch({
+                    type: RESET_PASSWORD_CONFIRM_FAIL
+                });
+                dispatch({
+                    type: REMOVE_AUTH_LOADING
+                });
+                dispatch(setAlert('Error resetting your password', 'red'));
+            }
+        } catch (err) {
+            dispatch({
+                type: RESET_PASSWORD_CONFIRM_FAIL
+            });
+            dispatch({
+                type: REMOVE_AUTH_LOADING
+            });
+            dispatch(setAlert('Error resetting your password', 'red'));
+        }
+    }
+}
+
+export const logout = () => dispatch => {
+    dispatch({
+        type: LOGOUT
+    });
+    dispatch(setAlert('Succesfully logged out', 'green'));
 }
