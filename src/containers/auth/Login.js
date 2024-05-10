@@ -37,7 +37,7 @@ const Login = ({
           <img
             className="mx-auto h-[100px] w-auto"
             src="https://img.freepik.com/vector-premium/diseno-logotipo-degradado-colorido-letra_161396-949.jpg?w=740"
-            alt="Workflow"
+            alt="Panitasbot"
           />
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Sign in to your account</h2>
           <p className="mt-2 text-center text-sm text-gray-600">

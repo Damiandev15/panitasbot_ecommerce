@@ -26,7 +26,7 @@ const Layout = (props) => {
 }
 
 export default connect(null, {
+    refresh,
     check_authenticated,
-    load_user,
-    refresh
+    load_user
 })(Layout)

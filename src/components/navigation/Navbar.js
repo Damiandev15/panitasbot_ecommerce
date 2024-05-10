@@ -172,7 +172,7 @@ function Navbar({
             </Menu.Item>
 
 
-            <form method="POST" action="#">
+            <form method="POST" action="/">
               <Menu.Item>
                 {({ active }) => (
                   <button
@@ -215,11 +215,11 @@ function Navbar({
           <div className="max-w-7xl mx-auto flex justify-between items-center px-4 py-5 sm:px-6 sm:py-4 lg:px-8 md:justify-start md:space-x-10">
             <div>
               <Link to="/" className="flex">
-                <span className="sr-only">Workflow</span>
+                <span className="sr-only">Panitas bot</span>
                 <img
                   className="h-8 w-auto sm:h-10"
-                  src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
-                  alt=""
+                  src="https://img.freepik.com/vector-premium/diseno-logotipo-degradado-colorido-letra_161396-949.jpg?w=740"
+                  alt="Panitasbot"
                 />
               </Link>
             </div>
